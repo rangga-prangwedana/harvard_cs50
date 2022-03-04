@@ -1,0 +1,94 @@
+#include <cs50.h>
+#include <stdio.h>
+
+int main(void)
+{
+    // Get credit card number and keep refusing inputs if it's not positive integers
+    long credit;
+
+    do
+    {
+        credit = get_long("Number: ");
+    }
+    while (credit < 0);
+
+    // These two variables is used to iterate some of the process
+    // Variable credit only used for prompting inputs for now
+    long number_first = credit;
+    long number_count = credit;
+
+    // These variables is used to check the first and second digits of the credit
+    int credit_firstnum;
+    int credit_secnum;
+
+    // Variable cc_count is used for storing the length of the credit number
+    int cc_count = 0;
+
+    // These variables is used in the loop for Lunh's algorithm
+    int number_temp;
+    int first_num;
+    int second_num;
+    int sum_even = 0;
+    int sum_odd = 0;
+    int final_num;
+
+    // Check how long the number is
+    while (number_count > 0)
+    {
+        number_count = number_count / 10;
+        cc_count++;
+    }
+
+    //Lunh's algo and checking first and second credit number
+    for (int i = 1; i <= cc_count; i++)
+    {
+        if (i % 2 == 0)
+        {
+            number_temp = number_first % 10;
+            number_temp = number_temp * 2;
+            if (number_temp > 9)
+            {
+                while (number_temp > 9)
+                {
+                    first_num = number_temp % 10;
+                    second_num = number_temp / 10;
+                    number_temp = first_num + second_num;
+                }
+            }
+            sum_even += number_temp;
+        }
+        else
+        {
+            sum_odd += number_first % 10;
+        }
+        number_first = number_first / 10;
+
+        if (i == cc_count - 2)
+        {
+            credit_secnum = number_first % 10;
+        }
+        if (i == cc_count - 1)
+        {
+            credit_firstnum = number_first;
+        }
+    }
+    final_num = (sum_even + sum_odd) % 10;
+
+    //Print the result of the credit card
+    if (credit_firstnum == 4 && (cc_count == 13 || cc_count == 16) && final_num == 0)
+    {
+        printf("VISA\n");
+    }
+    else if (credit_firstnum == 3 && cc_count == 15 && (credit_secnum == 4 || credit_secnum == 7))
+    {
+        printf("AMEX\n");
+    }
+    else if (credit_firstnum == 5 && cc_count == 16 && (credit_secnum >= 1 && credit_secnum <= 5))
+    {
+        printf("MASTERCARD\n");
+    }
+    else
+    {
+        printf("INVALID\n");
+    }
+}
