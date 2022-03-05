@@ -1,0 +1,83 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <math.h>
+
+int count_letters(string text);
+int count_words(string text);
+int count_sentences(string text);
+
+int main(void)
+{
+    // Get text from user
+    string text = get_string("Text: ");
+
+    // Variables for Coleman-Liau index
+    int letters = count_letters(text);
+    int words = count_words(text);
+    int sentences = count_sentences(text);
+
+    float indexL = letters / (float) words * 100;
+    float indexS = sentences / (float) words * 100;
+    int cli = round(0.0588 * indexL - 0.296 * indexS - 15.8);
+
+    // Printing Grade
+    if (cli < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else if (cli > 16)
+    {
+        printf("Grade 16+\n");
+    }
+    else
+    {
+        printf("Grade %d\n", cli);
+    }
+
+}
+
+int count_letters(string text)
+{
+    // Function for counting letters
+    int count_letters = 0;
+    for (int i = 0, n = strlen(text); i < n; i++)
+    {
+        if (isalpha(text[i]))
+        {
+            count_letters++;
+        }
+    }
+    return count_letters;
+}
+
+int count_words(string text)
+{
+    // Function for counting words
+    int count_words = 1;
+    for (int i = 0, n = strlen(text); i < n; i++)
+    {
+        if (isspace(text[i]))
+        {
+            count_words++;
+        }
+    }
+    return count_words;
+}
+
+int count_sentences(string text)
+{
+    // Function for counting the number of sentences
+    // For the assigment, all words that ends with '.' or '?' or '!'
+    // will be considered a sentence.
+    int count_sentences = 0;
+    for (int i = 0, n = strlen(text); i < n; i++)
+    {
+        if (text[i] == '.' || text[i] == '?' || text[i] == '!')
+        {
+            count_sentences++;
+        }
+    }
+    return count_sentences;
+}
